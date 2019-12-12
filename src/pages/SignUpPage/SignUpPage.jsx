@@ -1,22 +1,36 @@
 import React from 'react';
-import SignUp from '../../components/SignUp/SignUp';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
-import './SignUpPage.scss';
+import SignUp from '../../components/SignUp/SignUp';
 import SignUpVerification from '../../components/SignUp/Verification/Verification';
 
-function HomePage({ match }) {
+import { selectUserCompletedSignUpForm } from '../../redux/user/userSelectors';
+
+import './SignUpPage.scss';
+
+function HomePage({ match, signUpFormCompleted }) {
   return (
     <div className="sign-up-page">
       <Route exact path={`${match.path}`} component={SignUp} />
       <Route
         exact
         path={`${match.path}/verify`}
-        component={SignUpVerification}
+        render={() => {
+          return signUpFormCompleted ? (
+            <SignUpVerification />
+          ) : (
+            <Redirect to="/signup" />
+          );
+        }}
       />
-      {/* <SignUp /> */}
     </div>
   );
 }
 
-export default HomePage;
+const mapStateToProps = createStructuredSelector({
+  signUpFormCompleted: selectUserCompletedSignUpForm
+});
+
+export default connect(mapStateToProps)(HomePage);

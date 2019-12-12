@@ -7,7 +7,10 @@ import FormInput from '../FormInput/FormInput';
 import CustomButton from '../CustomButton/CustomButton';
 
 import { setUserSignUpField } from '../../redux/user/userActions';
-import { selectUserSignUpFields } from '../../redux/user/userSelectors';
+import {
+  selectUserSignUpFields,
+  selectUserCompletedSignUpForm
+} from '../../redux/user/userSelectors';
 
 import './SignUp.scss';
 
@@ -31,12 +34,9 @@ class SignUp extends React.Component {
   };
 
   isValidForm = () => {
-    const formFields = this.props.formFields;
-    const fieldsFilledIn = Object.values(formFields).every(
-      field => field.length > 0
-    );
+    const { formFields, allFieldsEntered } = this.props;
     const passwordMatch = formFields.confirmPassword === formFields.password;
-    return fieldsFilledIn && passwordMatch;
+    return allFieldsEntered && passwordMatch;
   };
 
   render() {
@@ -117,7 +117,8 @@ const mapDisptachToProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  formFields: selectUserSignUpFields
+  formFields: selectUserSignUpFields,
+  allFieldsEntered: selectUserCompletedSignUpForm
 });
 
 export default withRouter(connect(mapStateToProps, mapDisptachToProps)(SignUp));
