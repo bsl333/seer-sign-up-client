@@ -1,0 +1,13 @@
+.verify {
+  width: 35%;
+  min-width: 200px;
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    button:first-child {
+      margin-right: 20px;
+    }
+  }
+}
