@@ -1,39 +1,59 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import FormInput from '../FormInput/FormInput';
-import './SignUp.scss';
 import CustomButton from '../CustomButton/CustomButton';
 
-export default class SignUp extends React.Component {
-  state = {
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  };
+import { setUserSignUpField } from '../../redux/user/userActions';
+import { selectUserSignUpFields } from '../../redux/user/userSelectors';
 
+import './SignUp.scss';
+
+class SignUp extends React.Component {
   handleChange = e => {
-    this.setState({
+    this.props.setUserSignUpField({
       [e.target.name]: e.target.value
     });
   };
 
   handleSubmit = e => {
-    e.preventDefault();
+    e && e.preventDefault();
+  };
+
+  renderError = (password, confirmPassword) => {
+    if (confirmPassword !== password) {
+      return <div className="password-error">passwords do not match</div>;
+    }
+  };
+
+  isValidForm = () => {
+    const formFields = this.props.formFields;
+    const fieldsFilledIn = Object.values(formFields).every(
+      field => field.length > 0
+    );
+    const passwordMatch = formFields.confirmPassword === formFields.password;
+    return fieldsFilledIn && passwordMatch;
   };
 
   render() {
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      confirmPassword
+    } = this.props.formFields;
     return (
       <div className="sign-up">
-        <h2 className="title">Welcome, please register</h2>
+        <h1 className="title">Welcome, please register</h1>
         <form onSubmit={this.handleSubmit}>
           <FormInput
             type="text"
             name="firstName"
             label="first name"
-            value={this.state.firstName}
+            value={firstName}
             handleChange={this.handleChange}
             required
           />
@@ -41,7 +61,7 @@ export default class SignUp extends React.Component {
             type="text"
             name="lastName"
             label="last name"
-            value={this.state.lastName}
+            value={lastName}
             handleChange={this.handleChange}
             required
           />
@@ -49,7 +69,7 @@ export default class SignUp extends React.Component {
             type="text"
             name="username"
             label="username"
-            value={this.state.username}
+            value={username}
             handleChange={this.handleChange}
             required
           />
@@ -57,7 +77,7 @@ export default class SignUp extends React.Component {
             type="email"
             name="email"
             label="email"
-            value={this.state.email}
+            value={email}
             handleChange={this.handleChange}
             required
           />
@@ -65,7 +85,7 @@ export default class SignUp extends React.Component {
             type="password"
             name="password"
             label="password"
-            value={this.state.password}
+            value={password}
             handleChange={this.handleChange}
             required
           />
@@ -73,14 +93,28 @@ export default class SignUp extends React.Component {
             type="password"
             name="confirmPassword"
             label="confirm password"
-            value={this.state.confirmPassword}
+            value={confirmPassword}
             handleChange={this.handleChange}
             required
           />
+          {confirmPassword.length > 0 &&
+            this.renderError(password, confirmPassword)}
 
-          <CustomButton type="submit">Continue</CustomButton>
+          <CustomButton type="submit" disabled={!this.isValidForm()}>
+            Continue
+          </CustomButton>
         </form>
       </div>
     );
   }
 }
+
+const mapDisptachToProps = {
+  setUserSignUpField
+};
+
+const mapStateToProps = createStructuredSelector({
+  formFields: selectUserSignUpFields
+});
+
+export default connect(mapStateToProps, mapDisptachToProps)(SignUp);

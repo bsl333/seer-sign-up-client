@@ -2,19 +2,26 @@ import React from 'react';
 
 import './CustomButton.scss';
 
-const createClass = (confirm, danger) => {
-  let clasName = 'custom-button';
-  if (confirm) {
-    clasName += ' confirm';
-  } else if (danger) {
-    clasName += ' danger';
+const createClass = (confirm, danger, disabled) => {
+  let className = 'custom-button';
+  if (disabled) {
+    className += ' disabled';
   }
-  return clasName;
+  if (confirm) {
+    className += ' confirm';
+  } else if (danger) {
+    className += ' danger';
+  }
+  return className;
 };
 
-function CustomButton({ children, type, confirm, danger }) {
+function CustomButton({ children, type, confirm, danger, disabled }) {
   return (
-    <button className={createClass(confirm, danger)} type={type}>
+    <button
+      className={createClass(confirm, danger, disabled)}
+      type={type}
+      disabled={disabled}
+    >
       {children}
     </button>
   );

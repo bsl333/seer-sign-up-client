@@ -1,4 +1,12 @@
 .sign-up {
   width: 35%;
   min-width: 200px;
+
+  .password-error {
+    margin-bottom: 20px;
+    color: red;
+    &:before {
+      content: '*';
+    }
+  }
 }
