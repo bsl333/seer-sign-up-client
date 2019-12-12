@@ -20,28 +20,6 @@
     border: 1px solid black;
   }
 
-  &.confirm {
-    background-color: dodgerblue;
-    color: white;
-
-    &:hover {
-      background-color: white;
-      color: dodgerblue;
-      border: 1px solid dodgerblue;
-    }
-  }
-
-  &.danger {
-    background-color: #d9534f;
-    color: white;
-
-    &:hover {
-      background-color: white;
-      color: #d9534f;
-      border: 1px solid #d9534f;
-    }
-  }
-
   &.disabled {
     opacity: 50%;
     &:hover {
