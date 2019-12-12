@@ -10,10 +10,16 @@ const renderLabel = (label, value) => {
   );
 };
 
-function FormInput({ handleChange, label, ...props }) {
+function FormInput({ handleChange, label, readOnly, ...props }) {
+  const className = readOnly ? 'form-input read-only' : 'form-input';
   return (
     <div className="group">
-      <input className="form-input" onChange={handleChange} {...props} />
+      <input
+        className={`${className}`}
+        onChange={handleChange}
+        {...props}
+        readOnly={readOnly}
+      />
       {renderLabel(label, props.value)}
     </div>
   );
