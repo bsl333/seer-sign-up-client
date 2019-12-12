@@ -1,13 +1,21 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import HomePage from './pages/HomePage/HomePage';
+import { Route, Redirect, Switch } from 'react-router-dom';
+import HomePage from './pages/SignUpPage/SignUpPage';
 
 import './App.scss';
 
 function App() {
   return (
     <div className="container">
-      <Route exact path="/" component={HomePage} />
+      <Switch>
+        <Route path="/signup" component={HomePage} />
+        <Route
+          path="/"
+          render={() => {
+            return <Redirect to="/signup" />;
+          }}
+        />
+      </Switch>
     </div>
   );
 }

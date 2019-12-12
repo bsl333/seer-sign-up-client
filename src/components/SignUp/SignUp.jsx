@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { withRouter } from 'react-router-dom';
 
 import FormInput from '../FormInput/FormInput';
 import CustomButton from '../CustomButton/CustomButton';
@@ -18,7 +19,9 @@ class SignUp extends React.Component {
   };
 
   handleSubmit = e => {
-    e && e.preventDefault();
+    e.preventDefault();
+    const { match, history } = this.props;
+    history.push(`${match.path}/verify`);
   };
 
   renderError = (password, confirmPassword) => {
@@ -117,4 +120,4 @@ const mapStateToProps = createStructuredSelector({
   formFields: selectUserSignUpFields
 });
 
-export default connect(mapStateToProps, mapDisptachToProps)(SignUp);
+export default withRouter(connect(mapStateToProps, mapDisptachToProps)(SignUp));
