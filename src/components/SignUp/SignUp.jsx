@@ -12,31 +12,62 @@ import {
   selectUserCompletedSignUpForm
 } from '../../redux/user/userSelectors';
 
+import { checkEmail, checkUsername } from '../../api/usersApi';
+
 import './SignUp.scss';
 
 class SignUp extends React.Component {
+  state = {
+    isEmailAvailable: true,
+    isUsernameAvailable: true
+  };
   handleChange = e => {
     this.props.setUserSignUpField({
       [e.target.name]: e.target.value
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async (e, email, username) => {
     e.preventDefault();
+    const resps = await Promise.all([
+      checkEmail(email),
+      checkUsername(username)
+    ]);
+    console.log(resps);
+    if (!resps.every(resp => resp.data.available)) return;
+
     const { match, history } = this.props;
     history.push(`${match.path}/verify`);
   };
 
   renderError = (password, confirmPassword) => {
     if (confirmPassword !== password) {
-      return <div className="password-error">passwords do not match</div>;
+      return <div className="error">passwords do not match</div>;
     }
   };
 
   isValidForm = () => {
     const { formFields, allFieldsEntered } = this.props;
+    const { isEmailAvailable, isUsernameAvailable } = this.state;
     const passwordMatch = formFields.confirmPassword === formFields.password;
-    return allFieldsEntered && passwordMatch;
+    return (
+      allFieldsEntered &&
+      passwordMatch &&
+      isEmailAvailable &&
+      isUsernameAvailable
+    );
+  };
+
+  onEmailBlur = async email => {
+    if (!email) return;
+    const isEmailAvailable = (await checkEmail(email)).data.available;
+    this.setState({ isEmailAvailable });
+  };
+
+  onUsernameBlur = async username => {
+    if (!username) return;
+    const isUsernameAvailable = (await checkUsername(username)).data.available;
+    this.setState({ isUsernameAvailable });
   };
 
   render() {
@@ -51,7 +82,7 @@ class SignUp extends React.Component {
     return (
       <div className="sign-up">
         <h1 className="title">Welcome, please register</h1>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={e => this.handleSubmit(e, email, username)}>
           <FormInput
             type="text"
             name="firstName"
@@ -74,16 +105,24 @@ class SignUp extends React.Component {
             label="username"
             value={username}
             handleChange={this.handleChange}
+            onBlur={() => this.onUsernameBlur(username)}
             required
           />
+          {this.state.isUsernameAvailable === false && (
+            <div className="error">username taken</div>
+          )}
           <FormInput
             type="email"
             name="email"
             label="email"
             value={email}
             handleChange={this.handleChange}
+            onBlur={() => this.onEmailBlur(email)}
             required
           />
+          {this.state.isEmailAvailable === false && (
+            <div className="error">email taken</div>
+          )}
           <FormInput
             type="password"
             name="password"
