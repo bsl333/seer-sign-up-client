@@ -1,4 +1,4 @@
-import { SET_USER_SIGN_UP_FIELD } from './userTypes';
+import { SET_USER_SIGN_UP_FIELD, CREATE_NEW_USER } from './userTypes';
 
 const initialUserSignUpState = {
   firstName: '',
@@ -23,6 +23,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
           ...state.userSignUpFields,
           ...action.payload
         }
+      };
+    case CREATE_NEW_USER:
+      return {
+        ...state,
+        currentUser: action.payload,
+        userSignUpFields: initialUserSignUpState
       };
     default:
       return state;

@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import FormInput from '../../FormInput/FormInput';
+import CustomButton from '../../CustomButton/CustomButton';
+
+import { createNewUser } from '../../../redux/user/userActions';
 
 import { selectUserSignUpFields } from '../../../redux/user/userSelectors';
-import CustomButton from '../../CustomButton/CustomButton';
 
 import './Verification.scss';
 
-function Verification({ formFields, history, match }) {
+function Verification({ formFields, createNewUser, history, match }) {
   const { firstName, lastName, username, email } = formFields;
   return (
     <div className="verify">
@@ -50,11 +52,17 @@ function Verification({ formFields, history, match }) {
         />
       </form>
       <div className="button-group">
-        <CustomButton onClick={() => history.push('/signup')}>
+        <CustomButton
+          onClick={() => {
+            history.push('/signup');
+          }}
+        >
           Change Info
         </CustomButton>
         <CustomButton
-          onClick={() => history.push(match.path.replace('verify', 'confirm'))}
+          onClick={() => {
+            createNewUser(formFields, history);
+          }}
         >
           Create Account
         </CustomButton>
@@ -67,4 +75,10 @@ const mapStateToProps = createStructuredSelector({
   formFields: selectUserSignUpFields
 });
 
-export default withRouter(connect(mapStateToProps)(Verification));
+const mapDispatchToProps = {
+  createNewUser
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Verification)
+);

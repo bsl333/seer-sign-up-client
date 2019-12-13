@@ -1,1 +1,2 @@
 export const SET_USER_SIGN_UP_FIELD = 'SET_USER_SIGN_UP_FIELD';
+export const CREATE_NEW_USER = 'CREATE_NEW_USER';

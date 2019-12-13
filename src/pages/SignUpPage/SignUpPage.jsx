@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 
 import SignUp from '../../components/SignUp/SignUp';
 import SignUpVerification from '../../components/SignUp/Verification/Verification';
+import SignUpConfirmtion from '../../components/SignUp/Confirmation/Confirmation';
 
 import { selectUserCompletedSignUpForm } from '../../redux/user/userSelectors';
 
@@ -24,6 +25,11 @@ function HomePage({ match, signUpFormCompleted }) {
             <Redirect to="/signup" />
           );
         }}
+      />
+      <Route
+        exact
+        path={`${match.path}/confirm`}
+        component={SignUpConfirmtion}
       />
     </div>
   );
