@@ -7,7 +7,17 @@ export const selectUserSignUpFields = createSelector(
   user => user.userSignUpFields
 );
 
+export const selectCurrentUser = createSelector(
+  [selectUser],
+  user => user.currentUser
+);
+
 export const selectUserCompletedSignUpForm = createSelector(
   [selectUserSignUpFields],
   formFields => Object.values(formFields).every(field => field)
+);
+
+export const selectUsername = createSelector(
+  [selectCurrentUser],
+  currentUser => currentUser.username
 );
